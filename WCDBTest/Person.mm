@@ -76,7 +76,7 @@ WCDB_INDEX(Person, "_multiIndexSubfix", name)
     if (conditions.conditions.count>0) {
         if (conditions.conditions.count>1) {
             unsigned long logic = conditions.logicOperator;
-            __block WCTCondition wWCTCondition = [self formatCondition:conditions.conditions.firstObject];
+            WCTCondition wWCTCondition = [self formatCondition:conditions.conditions.firstObject];
             for (NSUInteger index = 1; index<conditions.conditions.count; index++) {
                 Condition *condition_next = conditions.conditions[index];
                 switch (logic) {
@@ -103,7 +103,7 @@ WCDB_INDEX(Person, "_multiIndexSubfix", name)
     if (complexcondition.complexCondition.count>0) {
         if (complexcondition.complexCondition.count>1) {
             unsigned long logic = complexcondition.logicOperator;
-            __block WCTCondition wWCTCondition = [self formatConditions:complexcondition.complexCondition.firstObject];
+            WCTCondition wWCTCondition = [self formatConditions:complexcondition.complexCondition.firstObject];
             for (NSUInteger index = 1; index<complexcondition.complexCondition.count; index++) {
                 Conditions *conditions_next = complexcondition.complexCondition[index];
                 switch (logic) {
