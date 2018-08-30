@@ -191,10 +191,6 @@
         NSLog(@"read by Condition LIKE ,count %ld,%@",persons.count,persons);
     };
     
-   
-    
-    return;
-    
     {
         NSArray *persons = [Person wcdb_getUseConditions:[Conditions ConditionsWith:@[[Condition ConditionWith:@"age"
                                                                                                    andOperator:ConditionOperator_Equal|ConditionOperator_More
@@ -219,8 +215,8 @@
                                                                                                                   andLogicOperator:ConditionLogicOperator_And],
                                                                                                         
                                                                                                         [Conditions ConditionsWith:@[[Condition ConditionWith:@"name"
-                                                                                                                                                  andOperator:ConditionOperator_Equal
-                                                                                                                                                     andValue:@"BE71977B-011D-48EA-83AF-1237BB99EF71"],
+                                                                                                                                                  andOperator:ConditionOperator_Like
+                                                                                                                                                     andValue:@"%DEA%"],
                                                                                                                                      [Condition ConditionWith:@"high"
                                                                                                                                                   andOperator:ConditionOperator_More
                                                                                                                                                      andValue:@37]]
