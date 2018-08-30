@@ -64,7 +64,10 @@ typedef NS_ENUM(NSUInteger,OrderType)
 
 @interface AKCDBBaseModel : NSObject
 + (id)wcdb;
-+ (BOOL)wcdb_insert:(NSArray*)objs into:(NSString*)table;
++ (BOOL)wcdb_insert:(NSArray*)objs;
+
+//按条件更新 支持返回最新model {@"key":@"value"}
++ (id)wcdb_update:(NSDictionary*)dict where:(Condition*)condition returnNew:(BOOL)returnNew;
 
 + (id)wcdb_getall;
 

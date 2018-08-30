@@ -151,10 +151,33 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
     return WCDBHelper.wcdb;
 }
 
-+ (BOOL)wcdb_insert:(NSArray*)objs into:(NSString*)table
++ (BOOL)wcdb_insert:(NSArray*)objs
 {
-    BOOL insertres = [self.wcdb insertObjects:objs into:table];
+    BOOL insertres = [self.wcdb insertObjects:objs into:NSStringFromClass(self)];
     return insertres;
+}
+
++ (WCTProperty)Property:(NSString*)name
+{
+    return WCTProperty(name);
+}
+
++ (id)wcdb_update:(NSDictionary*)dict where:(Condition*)condition returnNew:(BOOL)returnNew
+{
+    NSLog(@"%s,%@,%@,%@,%d",__FUNCTION__,dict,NSStringFromClass(self),condition,returnNew);
+    __block BOOL updateres = YES;
+    [dict enumerateKeysAndObjectsUsingBlock:^(NSString*property,id value,BOOL*stop){
+        updateres = [self.wcdb updateRowsInTable:NSStringFromClass(self) onProperty:[self Property:property] withValue:value where:[self formatCondition:condition]];
+        NSLog(@"%d,%@,%@",updateres,property,value);
+        if (!updateres) {
+            *stop = YES;
+        }
+    }];
+    if (returnNew && updateres) {
+        return [self wcdb_getUseCondition:condition];
+    }else{
+        return @(updateres);
+    }
 }
 
 /*
@@ -183,7 +206,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 
 + (id)wcdb_getall
 {
-    NSArray *persons = [self.wcdb getAllObjectsOfClass:self.class fromTable:NSStringFromClass(self.class)];
+    NSArray *persons = [self.wcdb getAllObjectsOfClass:self fromTable:NSStringFromClass(self)];
     return persons;
 }
 
@@ -191,7 +214,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@",__FUNCTION__,condition);
     if (condition) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatCondition:condition]];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatCondition:condition]];
         return persons;
     }
     return nil;
@@ -201,7 +224,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%@",__FUNCTION__,condition,orderinfo);
     if (condition && orderinfo) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatCondition:condition] orderBy:[self orderBy:orderinfo]];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatCondition:condition] orderBy:[self orderBy:orderinfo]];
         return persons;
     }
     return nil;
@@ -211,7 +234,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%lu,%lu",__FUNCTION__,condition,limit,offset);
     if (condition) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatCondition:condition]  limit:limit offset:offset];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatCondition:condition]  limit:limit offset:offset];
         return persons;
     }
     return nil;
@@ -221,7 +244,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%@,%lu,%lu",__FUNCTION__,condition,orderinfo,limit,offset);
     if (condition && orderinfo) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatCondition:condition]  orderBy:[self orderBy:orderinfo] limit:limit offset:offset];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatCondition:condition]  orderBy:[self orderBy:orderinfo] limit:limit offset:offset];
         return persons;
     }
     return nil;
@@ -231,7 +254,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@",__FUNCTION__,conditions);
     if (conditions) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatConditions:conditions]];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatConditions:conditions]];
         return persons;
     }
     return nil;
@@ -241,7 +264,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%@",__FUNCTION__,conditions,orderinfo);
     if (conditions && orderinfo) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatConditions:conditions] orderBy:[self orderBy:orderinfo]];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatConditions:conditions] orderBy:[self orderBy:orderinfo]];
         return persons;
     }
     return nil;
@@ -251,7 +274,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%lu,%lu",__FUNCTION__,conditions,limit,offset);
     if (conditions) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatConditions:conditions] limit:limit offset:offset];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatConditions:conditions] limit:limit offset:offset];
         return persons;
     }
     return nil;
@@ -261,7 +284,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%@,%lu,%lu",__FUNCTION__,conditions,orderinfo,limit,offset);
     if (conditions && orderinfo) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatConditions:conditions] orderBy:[self orderBy:orderinfo] limit:limit offset:offset];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatConditions:conditions] orderBy:[self orderBy:orderinfo] limit:limit offset:offset];
         return persons;
     }
     return nil;
@@ -272,7 +295,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@",__FUNCTION__,complexCondition);
     if (complexCondition) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatComplexCondition:complexCondition]];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatComplexCondition:complexCondition]];
         return persons;
     }
     return nil;
@@ -282,7 +305,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%@",__FUNCTION__,complexCondition,orderinfo);
     if (complexCondition && orderinfo) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatComplexCondition:complexCondition] orderBy:[self orderBy:orderinfo]];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatComplexCondition:complexCondition] orderBy:[self orderBy:orderinfo]];
         return persons;
     }
     return nil;
@@ -292,7 +315,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%lu,%lu",__FUNCTION__,complexCondition,limit,offset);
     if (complexCondition) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatComplexCondition:complexCondition] limit:limit offset:offset];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatComplexCondition:complexCondition] limit:limit offset:offset];
         return persons;
     }
     return nil;
@@ -302,7 +325,7 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
 {
     NSLog(@"%s,%@,%@,%lu,%lu",__FUNCTION__,complexCondition,orderinfo,limit,offset);
     if (complexCondition && orderinfo) {
-        NSArray *persons = [self.wcdb getObjectsOfClass:self.class fromTable:NSStringFromClass(self.class) where:[self formatComplexCondition:complexCondition] orderBy:[self orderBy:orderinfo] limit:limit offset:offset];
+        NSArray *persons = [self.wcdb getObjectsOfClass:self fromTable:NSStringFromClass(self) where:[self formatComplexCondition:complexCondition] orderBy:[self orderBy:orderinfo] limit:limit offset:offset];
         return persons;
     }
     return nil;

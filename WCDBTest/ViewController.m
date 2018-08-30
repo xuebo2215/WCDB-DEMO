@@ -70,6 +70,14 @@
     [readallbtn addTarget:self action:@selector(readAll) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:readallbtn];
     [readallbtn setFrame:CGRectMake((SCREEN_WIDTH-100)/2, CGRectGetMaxY(readorderbtn.frame)+10, 100, 44)];
+    
+    
+    UIButton *updatebtn = [[UIButton alloc] init];
+    [updatebtn setTitle:@"updateTest" forState:UIControlStateNormal];
+    [updatebtn setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
+    [updatebtn addTarget:self action:@selector(updateTest) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:updatebtn];
+    [updatebtn setFrame:CGRectMake((SCREEN_WIDTH-100)/2, CGRectGetMaxY(readallbtn.frame)+10, 100, 44)];
 }
 
 - (void)insertTest
@@ -88,7 +96,7 @@
             [p setHigh:high];
             [persons addObject:p];
         }
-        BOOL insertres = [Person wcdb_insert:persons into:NSStringFromClass(Person.class)];
+        BOOL insertres = [Person wcdb_insert:persons];
         NSLog(@"insertres 1 : %d",insertres);
     });
     
@@ -105,9 +113,22 @@
             [p setHigh:high];
             [persons addObject:p];
         }
-        BOOL insertres = [Person wcdb_insert:persons into:NSStringFromClass(Person.class)];
+        BOOL insertres = [Person wcdb_insert:persons];
         NSLog(@"insertres 2 : %d",insertres);
     });
+}
+
+- (void)updateTest
+{
+    //"name:41A4E8CD-6CCC-4C7B-BDEA-FCDFDCCAFA26,age:99,high:75"  测试数据
+    
+    NSArray *persons = [Person wcdb_update:@{@"age":@99689,@"high":@9198}
+                                     where:[Condition ConditionWith:@"name"
+                                                        andOperator:ConditionOperator_Equal
+                                                           andValue:@"17C1846F-D5E3-4D88-A0DE-E663E05B0174"]
+                                 returnNew:YES];
+    
+    NSLog(@"UPDATE AND RETURN NEW ,count %ld,%@",persons.count,persons);
 }
 
 - (void)readAll

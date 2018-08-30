@@ -40,6 +40,17 @@ WCDB_INDEX(Person, "_multiIndexSubfix", name)
     return list;
 }
 
++ (WCTProperty)Property:(NSString*)name
+{
+    if ([name isEqualToString:@"age"]) {
+        return self.age;
+    }else if ([name isEqualToString:@"name"]) {
+        return self.name;
+    }else if ([name isEqualToString:@"high"]) {
+        return self.high;
+    }
+    return self.name;
+}
 
 + (WCTCondition)formatCondition:(Condition*)condition
 {
@@ -123,7 +134,7 @@ WCDB_INDEX(Person, "_multiIndexSubfix", name)
         }
     }
     
-    
+
     return NULL;
 }
 @end
