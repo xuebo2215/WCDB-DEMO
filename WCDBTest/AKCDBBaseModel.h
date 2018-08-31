@@ -66,6 +66,9 @@ typedef NS_ENUM(NSUInteger,OrderType)
 + (id)wcdb;
 + (BOOL)wcdb_insert:(NSArray*)objs;
 
++ (BOOL)wcdb_delete:(Condition*)condition;
++ (BOOL)wcdb_deleteall;
+
 //按条件更新 支持返回最新model {@"key":@"value"}
 + (id)wcdb_update:(NSDictionary*)dict where:(Condition*)condition returnNew:(BOOL)returnNew;
 

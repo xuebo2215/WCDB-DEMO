@@ -78,6 +78,14 @@
     [updatebtn addTarget:self action:@selector(updateTest) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:updatebtn];
     [updatebtn setFrame:CGRectMake((SCREEN_WIDTH-100)/2, CGRectGetMaxY(readallbtn.frame)+10, 100, 44)];
+    
+    
+    UIButton *delbtn = [[UIButton alloc] init];
+    [delbtn setTitle:@"delTest" forState:UIControlStateNormal];
+    [delbtn setTitleColor:UIColor.blueColor forState:UIControlStateNormal];
+    [delbtn addTarget:self action:@selector(delTest) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:delbtn];
+    [delbtn setFrame:CGRectMake((SCREEN_WIDTH-100)/2, CGRectGetMaxY(updatebtn.frame)+10, 100, 44)];
 }
 
 - (void)insertTest
@@ -118,10 +126,22 @@
     });
 }
 
+- (void)delTest
+{
+    BOOL delres = [Person wcdb_delete:[Condition ConditionWith:@"name"
+                                     andOperator:ConditionOperator_Equal
+                                        andValue:@"17C1846F-D5E3-4D88-A0DE-E663E05B0174"]];
+    
+    NSArray *persons = [Person wcdb_getUseCondition:[Condition ConditionWith:@"name"
+                                                        andOperator:ConditionOperator_Equal
+                                                           andValue:@"17C1846F-D5E3-4D88-A0DE-E663E05B0174"]];
+    
+    NSLog(@"DEL %d ,count %ld,%@",delres,persons.count,persons);
+}
+
 - (void)updateTest
 {
     //"name:41A4E8CD-6CCC-4C7B-BDEA-FCDFDCCAFA26,age:99,high:75"  测试数据
-    
     NSArray *persons = [Person wcdb_update:@{@"age":@99689,@"high":@9198}
                                      where:[Condition ConditionWith:@"name"
                                                         andOperator:ConditionOperator_Equal
