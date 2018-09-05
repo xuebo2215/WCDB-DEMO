@@ -12,4 +12,5 @@
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, assign) NSUInteger age;
 @property (nonatomic, assign) NSUInteger high;
+@property (nonatomic, assign) NSUInteger time;
 @end

@@ -18,11 +18,16 @@ WCDB_IMPLEMENTATION(Person)
 WCDB_SYNTHESIZE(Person, name)
 WCDB_SYNTHESIZE(Person, age)
 WCDB_SYNTHESIZE(Person, high)
+//WCDB_SYNTHESIZE(Person, time)
+WCDB_SYNTHESIZE_DEFAULT(Person, time, 1)
 
 WCDB_PRIMARY(Person, name)
 
 WCDB_INDEX(Person, "_multiIndexSubfix", age)
 WCDB_INDEX(Person, "_multiIndexSubfix", name)
+
+
+
 
 - (NSString*)description
 {
@@ -133,8 +138,6 @@ WCDB_INDEX(Person, "_multiIndexSubfix", name)
             return [self formatConditions:complexcondition.complexCondition.firstObject];
         }
     }
-    
-
     return NULL;
 }
 @end

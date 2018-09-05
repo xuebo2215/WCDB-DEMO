@@ -353,4 +353,5 @@ static inline NSString* FormatOrderType(OrderType ordertype) {
     }
     return nil;
 }
+
 @end
